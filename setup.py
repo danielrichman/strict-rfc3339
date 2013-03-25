@@ -10,7 +10,7 @@ setup(
     author='Daniel Richman, Adam Greig',
     author_email='main@danielrichman.co.uk',
     packages=['strict_rfc3339'],
-    description="Strict RFC3339 Validation, Parsing and Generation",
+    description="Strict, simple, lightweight RFC3339 functions",
     long_description=readme,
     license="GNU General Public License Version 3",
     classifiers=[

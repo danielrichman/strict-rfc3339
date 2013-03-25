@@ -1,5 +1,5 @@
-Strict, super simple, lightweight RFC3339 functions
-===================================================
+Strict, simple, lightweight RFC3339 functions
+=============================================
 
 Goals
 -----

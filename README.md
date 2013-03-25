@@ -37,6 +37,58 @@ Rationale, comparisons to other choices
    of information lost when converting or transferring between two libraries
    (e.g., time -> datetime loses DST info in the tuple)
 
+Usage
+-----
+
+Validation
+
+    >>> strict_rfc3339.validate_rfc3339("some rubbish")
+    False
+    >>> strict_rfc3339.validate_rfc3339("2013-03-25T12:42:31+00:32")
+    True
+
+Indeed, we can then:
+
+    >>> strict_rfc3339.rfc3339_to_timestamp("2013-03-25T12:42:31+00:32")
+    1364213431
+    >>> tuple(time.gmtime(1364213431))[:6]
+    (2013, 3, 25, 12, 10, 31)
+
+No need for two function calls:
+
+    >>> strict_rfc3339.rfc3339_to_timestamp("some rubbish")
+    Traceback [...]
+    strict_rfc3339.InvalidRFC3339Error
+
+Producing strings: (note, for this example my TZ is set to America/New_York,
+since living in the UK produces fairly uninteresting localoffset examples)
+
+    >>> strict_rfc3339.timestamp_to_rfc3339_utcoffset(1364213431)
+    '2013-03-25T12:10:31Z'
+    >>> strict_rfc3339.timestamp_to_rfc3339_localoffset(1364213431)
+    '2013-03-25T08:10:31-04:00'
+
+Note this difference with timezone set to Europe/London:
+
+    >>> strict_rfc3339.timestamp_to_rfc3339_localoffset(1364213431)
+    '2013-03-25T12:10:31+00:00'
+
+Convenience functions:
+
+    >>> strict_rfc3339.now_to_rfc3339_utcoffset()
+    '2013-03-25T21:39:35Z'
+    >>> strict_rfc3339.now_to_rfc3339_localoffset()
+    '2013-03-25T17:39:39-04:00'
+
+Floats:
+
+    >>> strict_rfc3339.now_to_rfc3339_utcoffset(integer=True) # The default
+    '2013-03-25T22:04:01Z'
+    >>> strict_rfc3339.now_to_rfc3339_utcoffset(integer=False)
+    '2013-03-25T22:04:01.04399Z'
+    >>> strict_rfc3339.rfc3339_to_timestamp("2013-03-25T22:04:10.04399Z")
+    1364249050.0439899
+
 The things powering these functions
 -----------------------------------
 

@@ -51,6 +51,8 @@ class TestValidateRFC3339(unittest.TestCase):
         assert self.validate("2012-09-12T12:42:21-24:00") == False
         assert self.validate("2012-09-12T12:42:21+02:60") == False
 
+
+    def test_rejects_year_0(self):
         # See note in strict_rfc3339.py / caveats
         assert self.validate("0000-09-12T12:42:21Z") == False
 

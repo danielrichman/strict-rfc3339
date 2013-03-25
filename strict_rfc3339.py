@@ -35,6 +35,7 @@ rfc3339_regex = re.compile(
     r"(\d\d\d\d)\-(\d\d)\-(\d\d)T"
     r"(\d\d):(\d\d):(\d\d)(\.\d+)?(Z|([+\-])(\d\d):(\d\d))")
 
+
 def validate_rfc3339(datestring):
     """Check an RFC3339 string is valid via a regex and some range checks"""
 
@@ -70,9 +71,11 @@ def validate_rfc3339(datestring):
     # all OK
     return True
 
+
 class InvalidRFC3339Error(ValueError):
     """Subclass of ValueError thrown by rfc3339_to_timestamp"""
     pass
+
 
 def rfc3339_to_timestamp(datestring):
     """Convert an RFC3339 date-time string to a UTC UNIX timestamp"""
@@ -98,6 +101,7 @@ def rfc3339_to_timestamp(datestring):
 
     return timestamp
 
+
 def _make_datestring_start(time_tuple, seconds_part):
     ds_format = "{0:04d}-{1:02d}-{2:02d}T{3:02d}:{4:02d}:{5:02d}"
     datestring = ds_format.format(*time_tuple)
@@ -108,6 +112,7 @@ def _make_datestring_start(time_tuple, seconds_part):
         datestring += "." + seconds_part_str
 
     return datestring
+
 
 def timestamp_to_rfc3339_utcoffset(timestamp):
     """Convert a UTC UNIX timestamp to RFC3339, with the offset as 'Z'"""
@@ -121,10 +126,11 @@ def timestamp_to_rfc3339_utcoffset(timestamp):
     assert abs(rfc3339_to_timestamp(datestring) - timestamp) < 0.000001
     return datestring
 
+
 def timestamp_to_rfc3339_localoffset(timestamp):
     """
     Convert a UTC UNIX timestamp to RFC3339, using the local offset.
-    
+
     localtime() provides the time parts. The difference between gmtime and
     localtime tells us the offset.
     """
@@ -157,6 +163,7 @@ def timestamp_to_rfc3339_localoffset(timestamp):
 
     return datestring
 
+
 def now_to_rfc3339_utcoffset(integer=True):
     """Convert the current time to RFC3339, with the offset as 'Z'"""
 
@@ -164,6 +171,7 @@ def now_to_rfc3339_utcoffset(integer=True):
     if integer:
         timestamp = int(timestamp)
     return timestamp_to_rfc3339_utcoffset(timestamp)
+
 
 def now_to_rfc3339_localoffset(integer=True):
     """Convert the current time to RFC3339, using the local offset."""

@@ -47,7 +47,8 @@ def validate_rfc3339(datestring):
     year, month, day, hour, minute, second = [int(i) for i in groups[:6]]
 
     if not 1 <= year <= 9999:
-        # essentially forbids year = 0; calendar.monthrange rejects this
+        # Have to reject this, unfortunately (despite it being OK by rfc3339):
+        # calendar.timegm/calendar.monthrange can't cope (since datetime can't)
         return False
 
     if not 1 <= month <= 12:

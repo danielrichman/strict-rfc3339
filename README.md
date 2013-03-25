@@ -17,6 +17,7 @@ Caveats
  - Leap seconds are not quite supported, since timestamps do not support them,
    and it requires access to timezone data.
  - You may be limited by the size of time_t on 32 bit systems.
+ - python's implementation of timegm does not permit year = 0000
 
 In both cases, see 'Notes' below.
 

@@ -38,7 +38,6 @@ class TestValidateRFC3339(unittest.TestCase):
         assert self.validate("2012-09-12T12:42:21") == False
 
     def test_rejects_out_of_range(self):
-        assert self.validate("0000-09-12T12:42:21Z") == False
         assert self.validate("2012-00-12T12:42:21Z") == False
         assert self.validate("2012-13-12T12:42:21Z") == False
         assert self.validate("2012-09-00T12:42:21Z") == False
@@ -51,6 +50,9 @@ class TestValidateRFC3339(unittest.TestCase):
         assert self.validate("2012-09-12T12:42:21+24:00") == False
         assert self.validate("2012-09-12T12:42:21-24:00") == False
         assert self.validate("2012-09-12T12:42:21+02:60") == False
+
+        # See note in strict_rfc3339.py / caveats
+        assert self.validate("0000-09-12T12:42:21Z") == False
 
     def test_rejects_leap_seconds(self):
         # with regret :-(

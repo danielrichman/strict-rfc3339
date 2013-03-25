@@ -120,7 +120,7 @@ calendar is implemented in python. From calendar, we use
    and the ymd in the tuple, but that should be OK. It does not perform much
    validation at all.
  - monthrange: gives the number of days in a (year, month). I checked and
-   (atleast in my copy of python 2.6) the function used for leap years is
+   (at least in my copy of python 2.6) the function used for leap years is
    identical to the one specified in RFC3339.
 
 Notes

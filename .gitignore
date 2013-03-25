@@ -1,0 +1,5 @@
+*.pyc
+*.swp
+dist/
+MANIFEST
+strict_rfc3339.egg-info/

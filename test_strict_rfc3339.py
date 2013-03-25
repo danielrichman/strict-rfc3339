@@ -17,13 +17,13 @@
 
 import os
 import time
-from nose import SkipTest
+import unittest
 
-from ...utils import rfc3339
+import strict_rfc3339
 
 
-class TestValidateRFC3339(object):
-    validate = staticmethod(rfc3339.validate_rfc3339)
+class TestValidateRFC3339(unittest.TestCase):
+    validate = staticmethod(strict_rfc3339.validate_rfc3339)
 
     def test_rejects_bad_format(self):
         assert self.validate("asdf") == False
@@ -72,8 +72,8 @@ class TestValidateRFC3339(object):
         assert self.validate("1992-03-14T17:04:00-01:42") == True
 
 
-class TestRFC3339toTimestamp(object):
-    func = staticmethod(rfc3339.rfc3339_to_timestamp)
+class TestRFC3339toTimestamp(unittest.TestCase):
+    func = staticmethod(strict_rfc3339.rfc3339_to_timestamp)
 
     def test_simple_cases(self):
         assert self.func("1996-12-19T16:39:57-08:00") == 851042397
@@ -112,8 +112,8 @@ class TestRFC3339toTimestamp(object):
         assert abs(d) < 0.00000001
 
 
-class TestTimestampToRFC3339UTCOffset(object):
-    func = staticmethod(rfc3339.timestamp_to_rfc3339_utcoffset)
+class TestTimestampToRFC3339UTCOffset(unittest.TestCase):
+    func = staticmethod(strict_rfc3339.timestamp_to_rfc3339_utcoffset)
 
     def test_simple_cases(self):
         assert self.func(851042397) == "1996-12-20T00:39:57Z"
@@ -130,7 +130,7 @@ class TestTimestampToRFC3339UTCOffset(object):
             assert self.func(-2208988800) == "1900-01-01T00:00:00Z"
         except ValueError as e:
             if str(e) == "timestamp out of range for platform time_t":
-                raise SkipTest("Can't run this test on 32 bit")
+                print "Warning: can't run this test on 32 bit"
             else:
                 raise
 
@@ -144,19 +144,19 @@ class TestTimestampToRFC3339UTCOffset(object):
             assert self.func(-2203977600) == "1900-02-28T00:00:00Z"
         except ValueError as e:
             if str(e) == "timestamp out of range for platform time_t":
-                raise SkipTest("Can't run this test on 32 bit")
+                print "Warning: can't run this test on 32 bit"
             else:
                 raise
 
     def test_now(self):
-        s = rfc3339.now_to_rfc3339_utcoffset()
+        s = strict_rfc3339.now_to_rfc3339_utcoffset()
         assert s[-1] == "Z"
         assert len(s) == 20
-        d = int(time.time()) - rfc3339.rfc3339_to_timestamp(s)
+        d = int(time.time()) - strict_rfc3339.rfc3339_to_timestamp(s)
         assert d == 0 or d == 1
 
-        s = rfc3339.now_to_rfc3339_utcoffset(False)
-        assert abs(rfc3339.rfc3339_to_timestamp(s) - time.time()) <= 0.1
+        s = strict_rfc3339.now_to_rfc3339_utcoffset(False)
+        assert abs(strict_rfc3339.rfc3339_to_timestamp(s) - time.time()) <= 0.1
 
     def test_float(self):
         assert self.func(851042397.1234) == "1996-12-20T00:39:57.1234Z"
@@ -165,15 +165,15 @@ class TestTimestampToRFC3339UTCOffset(object):
         assert self.func(851042397.33311177) == "1996-12-20T00:39:57.333112Z"
 
 
-class TestTimestampToRFC3339LocalOffsetLondon(object):
-    func = staticmethod(rfc3339.timestamp_to_rfc3339_localoffset)
+class TestTimestampToRFC3339LocalOffsetLondon(unittest.TestCase):
+    func = staticmethod(strict_rfc3339.timestamp_to_rfc3339_localoffset)
 
-    def setup(self):
+    def setUp(self):
         self.old = os.environ.get("TZ", None)
         os.environ["TZ"] = "Europe/London"
         time.tzset()
 
-    def teardown(self):
+    def tearDown(self):
         if self.old is None:
             del os.environ["TZ"]
         else:
@@ -199,26 +199,26 @@ class TestTimestampToRFC3339LocalOffsetLondon(object):
         assert self.func(1344457836.005) == "2012-08-08T21:30:36.005+01:00"
 
     def test_now(self):
-        s = rfc3339.now_to_rfc3339_localoffset()
-        w = rfc3339.rfc3339_to_timestamp(s)
+        s = strict_rfc3339.now_to_rfc3339_localoffset()
+        w = strict_rfc3339.rfc3339_to_timestamp(s)
         assert s[-6:] == ["+00:00", "+01:00"][time.localtime(w).tm_isdst]
 
         d = int(time.time()) - w
         assert d == 0 or d == 1
 
-        s = rfc3339.now_to_rfc3339_localoffset(False)
-        assert abs(rfc3339.rfc3339_to_timestamp(s) - time.time()) <= 0.1
+        s = strict_rfc3339.now_to_rfc3339_localoffset(False)
+        assert abs(strict_rfc3339.rfc3339_to_timestamp(s) - time.time()) <= 0.1
 
 
-class TestTimestampToRFC3339LocalOffsetNewYork(object):
-    func = staticmethod(rfc3339.timestamp_to_rfc3339_localoffset)
+class TestTimestampToRFC3339LocalOffsetNewYork(unittest.TestCase):
+    func = staticmethod(strict_rfc3339.timestamp_to_rfc3339_localoffset)
 
-    def setup(self):
+    def setUp(self):
         self.old = os.environ.get("TZ", None)
         os.environ["TZ"] = "America/New_York"
         time.tzset()
 
-    def teardown(self):
+    def tearDown(self):
         if self.old is None:
             del os.environ["TZ"]
         else:
@@ -244,12 +244,15 @@ class TestTimestampToRFC3339LocalOffsetNewYork(object):
         assert self.func(1344457836.005) == "2012-08-08T16:30:36.005-04:00"
 
     def test_now(self):
-        s = rfc3339.now_to_rfc3339_localoffset()
-        w = rfc3339.rfc3339_to_timestamp(s)
+        s = strict_rfc3339.now_to_rfc3339_localoffset()
+        w = strict_rfc3339.rfc3339_to_timestamp(s)
         assert s[-6:] == ["-05:00", "-04:00"][time.localtime(w).tm_isdst]
 
         d = int(time.time()) - w
         assert d == 0 or d == 1
 
-        s = rfc3339.now_to_rfc3339_localoffset(False)
-        assert abs(rfc3339.rfc3339_to_timestamp(s) - time.time()) <= 0.1
+        s = strict_rfc3339.now_to_rfc3339_localoffset(False)
+        assert abs(strict_rfc3339.rfc3339_to_timestamp(s) - time.time()) <= 0.1
+
+if __name__ == '__main__':
+    unittest.main()

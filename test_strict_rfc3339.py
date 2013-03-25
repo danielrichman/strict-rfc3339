@@ -30,14 +30,15 @@ class TestValidateRFC3339(unittest.TestCase):
         assert self.validate("24822") == False
         assert self.validate("123-345-124T123:453:213") == False
         assert self.validate("99-09-12T12:42:21Z") == False
-        assert self.validate("99-09-12T12:42:21+00:") == False
         assert self.validate("99-09-12T12:42:21+00:00") == False
+        assert self.validate("1999-09-12T12:42:21+00:") == False
         assert self.validate("2012-09-12T21:-1:21") == False
 
     def test_rejects_no_offset(self):
         assert self.validate("2012-09-12T12:42:21") == False
 
     def test_rejects_out_of_range(self):
+        assert self.validate("0000-09-12T12:42:21Z") == False
         assert self.validate("2012-00-12T12:42:21Z") == False
         assert self.validate("2012-13-12T12:42:21Z") == False
         assert self.validate("2012-09-00T12:42:21Z") == False
@@ -74,6 +75,16 @@ class TestValidateRFC3339(unittest.TestCase):
 
 class TestRFC3339toTimestamp(unittest.TestCase):
     func = staticmethod(strict_rfc3339.rfc3339_to_timestamp)
+
+    def test_validates(self):
+        # This string would otherwise work: it would blissfully add the
+        # offset
+        try:
+            self.func("2012-09-12T12:42:21+24:00")
+        except strict_rfc3339.InvalidRFC3339Error:
+            pass
+        else:
+            raise Exception("Didn't throw InvalidRFC3339Error")
 
     def test_simple_cases(self):
         assert self.func("1996-12-19T16:39:57-08:00") == 851042397

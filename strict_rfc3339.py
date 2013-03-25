@@ -23,7 +23,9 @@ import re
 import time
 import calendar
 
-__all__ = ["validate_rfc3339", "rfc3339_to_timestamp",
+__all__ = ["validate_rfc3339",
+           "InvalidRFC3339Error",
+           "rfc3339_to_timestamp",
            "timestamp_to_rfc3339_utcoffset",
            "timestamp_to_rfc3339_localoffset",
            "now_to_rfc3339_utcoffset",
@@ -44,6 +46,10 @@ def validate_rfc3339(datestring):
 
     year, month, day, hour, minute, second = [int(i) for i in groups[:6]]
 
+    if not 1 <= year <= 9999:
+        # essentially forbids year = 0; calendar.monthrange rejects this
+        return False
+
     if not 1 <= month <= 12:
         return False
 
@@ -52,7 +58,7 @@ def validate_rfc3339(datestring):
         return False
 
     if not (0 <= hour <= 23 and 0 <= minute <= 59 and 0 <= second <= 59):
-        # forbid leap seconds :-(. See above
+        # forbid leap seconds :-(. See README
         return False
 
     if groups[7] != "Z":
@@ -63,10 +69,16 @@ def validate_rfc3339(datestring):
     # all OK
     return True
 
+class InvalidRFC3339Error(ValueError):
+    """Subclass of ValueError thrown by rfc3339_to_timestamp"""
+    pass
+
 def rfc3339_to_timestamp(datestring):
     """Convert an RFC3339 date-time string to a UTC UNIX timestamp"""
 
-    validate_rfc3339(datestring)
+    if not validate_rfc3339(datestring):
+        raise InvalidRFC3339Error
+
     groups = rfc3339_regex.match(datestring).groups()
 
     time_tuple = [int(p) for p in groups[:6]]

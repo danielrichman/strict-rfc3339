@@ -147,7 +147,7 @@ def timestamp_to_rfc3339_localoffset(timestamp):
     if abs(offset) % 60 != 0:
         raise ValueError("Your local offset is not a whole minute")
 
-    offset_minutes = abs(offset) / 60
+    offset_minutes = abs(offset) // 60
     offset_hours = offset_minutes // 60
     offset_minutes %= 60
 

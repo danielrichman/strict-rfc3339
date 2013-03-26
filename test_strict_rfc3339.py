@@ -144,7 +144,7 @@ class TestTimestampToRFC3339UTCOffset(unittest.TestCase):
             assert self.func(-2208988800) == "1900-01-01T00:00:00Z"
         except ValueError as e:
             if str(e) == "timestamp out of range for platform time_t":
-                print "Warning: can't run this test on 32 bit"
+                print("Warning: can't run this test on 32 bit")
             else:
                 raise
 
@@ -158,7 +158,7 @@ class TestTimestampToRFC3339UTCOffset(unittest.TestCase):
             assert self.func(-2203977600) == "1900-02-28T00:00:00Z"
         except ValueError as e:
             if str(e) == "timestamp out of range for platform time_t":
-                print "Warning: can't run this test on 32 bit"
+                print("Warning: can't run this test on 32 bit")
             else:
                 raise
 

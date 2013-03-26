@@ -104,8 +104,6 @@ time library, we use:
  - gmtime: splits a timestamp into a UTC time tuple
  - localtime: splits a timestamp into a local time tuple
    _including_ the 'is DST' flag
- - timezone: variable that provides the local timezone offset
- - altzone: variable that provides the local timezone DST offset
 
 Based on the (probably correct) assumption that gmtime and localtime are
 always right, we can use gmtime and localtime, and take the difference in order

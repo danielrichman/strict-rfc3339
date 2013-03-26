@@ -6,7 +6,7 @@ readme = open(readme_file).read()
 
 setup(
     name='strict-rfc3339',
-    version='0.3',
+    version='0.4',
     author='Daniel Richman, Adam Greig',
     author_email='main@danielrichman.co.uk',
     url='http://www.danielrichman.co.uk/projects/strict-rfc3339.html',
@@ -19,6 +19,8 @@ setup(
         "Intended Audience :: Developers",
         "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
         "Operating System :: OS Independent",
-        "Programming Language :: Python"
+        "Programming Language :: Python",
+        "Programming Language :: Python :: 2",
+        "Programming Language :: Python :: 3"
     ]
 )

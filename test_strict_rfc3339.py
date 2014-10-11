@@ -75,6 +75,12 @@ class TestValidateRFC3339(unittest.TestCase):
         assert self.validate("2011-06-23T17:12:00+05:21")
         assert self.validate("1992-03-14T17:04:00-01:42")
 
+    def test_rejects_trailing(self):
+        assert not self.validate("2011-02-28T12:42:21Z123123")
+        assert not self.validate("2011-06-23T17:12:00+05:21123123")
+        assert not self.validate("2011-02-28T12:42:21Zasdf")
+        assert not self.validate("2011-06-23T17:12:00+05:21asdf")
+
 
 class TestRFC3339toTimestamp(unittest.TestCase):
     func = staticmethod(strict_rfc3339.rfc3339_to_timestamp)

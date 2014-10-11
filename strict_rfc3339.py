@@ -32,8 +32,8 @@ __all__ = ["validate_rfc3339",
            "now_to_rfc3339_localoffset"]
 
 rfc3339_regex = re.compile(
-    r"(\d\d\d\d)\-(\d\d)\-(\d\d)T"
-    r"(\d\d):(\d\d):(\d\d)(\.\d+)?(Z|([+\-])(\d\d):(\d\d))")
+    r"^(\d\d\d\d)\-(\d\d)\-(\d\d)T"
+    r"(\d\d):(\d\d):(\d\d)(\.\d+)?(Z|([+\-])(\d\d):(\d\d))$")
 
 
 def validate_rfc3339(datestring):

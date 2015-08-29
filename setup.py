@@ -6,7 +6,7 @@ readme = open(readme_file).read()
 
 setup(
     name='strict-rfc3339',
-    version='0.5',
+    version='0.6',
     author='Daniel Richman, Adam Greig',
     author_email='main@danielrichman.co.uk',
     url='http://www.danielrichman.co.uk/projects/strict-rfc3339.html',

@@ -183,6 +183,13 @@ class TestTimestampToRFC3339UTCOffset(unittest.TestCase):
         assert self.func(851042397.0) == "1996-12-20T00:39:57Z"
         assert self.func(851042397.005) == "1996-12-20T00:39:57.005Z"
         assert self.func(851042397.33311177) == "1996-12-20T00:39:57.333112Z"
+        assert self.func(1460691564.9999998) == "2016-04-15T03:39:25Z"
+        assert self.func(1460691564.9999988) == "2016-04-15T03:39:24.999999Z"
+        assert self.func(-1.0050000001) == "1969-12-31T23:59:58.995Z"
+        assert self.func(-4128.0000008) == "1969-12-31T22:51:11.999999Z"
+        assert self.func(-4128.0000022) == "1969-12-31T22:51:11.999998Z"
+        assert self.func(-4128.9999998) == "1969-12-31T22:51:11Z"
+        assert self.func(-4128.9999991) == "1969-12-31T22:51:11.000001Z"
 
 
 class TestTimestampToRFC3339LocalOffsetLondon(unittest.TestCase):
@@ -217,6 +224,9 @@ class TestTimestampToRFC3339LocalOffsetLondon(unittest.TestCase):
     def test_float(self):
         assert self.func(851042397.1234) == "1996-12-20T00:39:57.1234+00:00"
         assert self.func(1344457836.005) == "2012-08-08T21:30:36.005+01:00"
+        # Did you know, the UK was actually UTC+1 for the whole of 1969 and 1970?
+        assert self.func(-1.005) == "1970-01-01T00:59:58.995+01:00"
+        assert self.func(-100385098.1234) == '1966-10-27T03:15:01.8766+00:00'
 
     def test_now(self):
         s = strict_rfc3339.now_to_rfc3339_localoffset()
@@ -262,6 +272,7 @@ class TestTimestampToRFC3339LocalOffsetNewYork(unittest.TestCase):
     def test_float(self):
         assert self.func(851042397.1234) == "1996-12-19T19:39:57.1234-05:00"
         assert self.func(1344457836.005) == "2012-08-08T16:30:36.005-04:00"
+        assert self.func(-1.005) == "1969-12-31T18:59:58.995-05:00"
 
     def test_now(self):
         s = strict_rfc3339.now_to_rfc3339_localoffset()
@@ -273,6 +284,7 @@ class TestTimestampToRFC3339LocalOffsetNewYork(unittest.TestCase):
 
         s = strict_rfc3339.now_to_rfc3339_localoffset(False)
         assert abs(strict_rfc3339.rfc3339_to_timestamp(s) - time.time()) <= 0.1
+
 
 if __name__ == '__main__':
     unittest.main()

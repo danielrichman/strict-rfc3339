@@ -102,11 +102,32 @@ def rfc3339_to_timestamp(datestring):
     return timestamp
 
 
-def _make_datestring_start(time_tuple, seconds_part):
+def _seconds_and_microseconds(timestamp):
+    """
+    Split a floating point timestamp into an integer number of seconds since
+    the epoch, and an integer number of microseconds (having rounded to the
+    nearest microsecond).
+
+    If `_seconds_and_microseconds(x) = (y, z)` then the following holds (up to
+    the error introduced by floating point operations):
+
+    * `x = y + z / 1_000_000.`
+    * `0 <= z < 1_000_000.`
+    """
+
+    if isinstance(timestamp, int):
+        return (timestamp, 0)
+    else:
+        timestamp_us = int(round(timestamp * 1e6))
+        return divmod(timestamp_us, 1000000)
+
+def _make_datestring_start(time_tuple, microseconds):
     ds_format = "{0:04d}-{1:02d}-{2:02d}T{3:02d}:{4:02d}:{5:02d}"
     datestring = ds_format.format(*time_tuple)
 
-    seconds_part_str = "{0:06d}".format(int(round(seconds_part * 1e6)))
+    seconds_part_str = "{0:06d}".format(microseconds)
+    # There used to be a bug here where it could be 1000000
+    assert len(seconds_part_str) == 6 and seconds_part_str[0] != '-'
     seconds_part_str = seconds_part_str.rstrip("0")
     if seconds_part_str != "":
         datestring += "." + seconds_part_str
@@ -116,11 +137,11 @@ def _make_datestring_start(time_tuple, seconds_part):
 
 def timestamp_to_rfc3339_utcoffset(timestamp):
     """Convert a UTC UNIX timestamp to RFC3339, with the offset as 'Z'"""
-    timestamp_int = int(timestamp)
-    seconds_part = timestamp % 1
 
-    time_tuple = time.gmtime(timestamp_int)
-    datestring = _make_datestring_start(time_tuple, seconds_part)
+    seconds, microseconds = _seconds_and_microseconds(timestamp)
+
+    time_tuple = time.gmtime(seconds)
+    datestring = _make_datestring_start(time_tuple, microseconds)
     datestring += "Z"
 
     assert abs(rfc3339_to_timestamp(datestring) - timestamp) < 0.000001
@@ -135,13 +156,12 @@ def timestamp_to_rfc3339_localoffset(timestamp):
     localtime tells us the offset.
     """
 
-    timestamp_int = int(timestamp)
-    seconds_part = timestamp % 1
+    seconds, microseconds = _seconds_and_microseconds(timestamp)
 
-    time_tuple = time.localtime(timestamp_int)
-    datestring = _make_datestring_start(time_tuple, seconds_part)
+    time_tuple = time.localtime(seconds)
+    datestring = _make_datestring_start(time_tuple, microseconds)
 
-    gm_time_tuple = time.gmtime(timestamp_int)
+    gm_time_tuple = time.gmtime(seconds)
     offset = calendar.timegm(time_tuple) - calendar.timegm(gm_time_tuple)
 
     if abs(offset) % 60 != 0:

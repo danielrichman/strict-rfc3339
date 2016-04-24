@@ -9,7 +9,7 @@ Goals
    that the C time module reports is the local timezone offset.
  - Simple with minimal dependencies/libraries.
  - Avoid timezones as much as possible.
- - Be very strict and follow RFC3339 as closely as possible.
+ - Be very strict and follow RFC3339.
 
 Caveats
 -------
@@ -20,16 +20,15 @@ Caveats
 
 In both cases, see 'Notes' below.
 
-Rationale, comparisons to other choices
----------------------------------------
+Rationale
+---------
 
  - A lot of libraries have trouble with DST transitions and ambiguous times.
- - Generally, using the python datetime object seems to be more trouble than
-   it's worth, introducing problems with timezones. Further, they don't support
-   leap seconds (timestamps don't either, admittedly).
- - The excellent `pytz` library does timezones perfectly, however it didn't (at
-   the time of writing) have a method for getting the local timezone or the
-   'now' time in the local zone.
+ - Generally, using the python datetime object causes trouble, introducing
+   problems with timezones.
+ - The excellent `pytz` library seems to achieve timezone perfection, however
+   it didn't (at the time of writing) have a method for getting the local
+   timezone or the 'now' time in the local zone.
  - I saw a lot of problems ultimately due to information lost when converting
    or transferring between two libraries (e.g., `time` -> `datetime` loses DST
    info in the tuple)
@@ -88,7 +87,7 @@ Floats:
 Behind the scenes
 -----------------
 
-These functions are essentially string and integer operations only. A very 
+These functions are essentially string formatting and arithmetic only.  A very
 small number of functions do the heavy lifting. These come from two modules:
 `time` and `calendar`.
 
@@ -110,8 +109,8 @@ timezone library.
  - `timegm`: turns a UTC time tuple into a timestamp. This essentially just
    multiplies each number in the tuple by the number of seconds in it. It does
    use `datetime.date` to work out the number of days between Jan 1 1970 and the
-   Y-M-D in the tuple, but that should be OK. It does not perform much
-   validation at all.
+   Y-M-D in the tuple, but this is fine. It does not perform much validation at
+   all.
  - `monthrange`: gives the number of days in a (year, month). I checked and
    (at least in my copy of python 2.6) the function used for leap years is
    identical to the one specified in RFC3339 itself.

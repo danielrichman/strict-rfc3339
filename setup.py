@@ -9,7 +9,7 @@ setup(
     version='0.6',
     author='Daniel Richman, Adam Greig',
     author_email='main@danielrichman.co.uk',
-    url='http://www.danielrichman.co.uk/projects/strict-rfc3339.html',
+    url='http://www.danielrichman.co.uk/libraries/strict-rfc3339.html',
     py_modules=['strict_rfc3339'],
     description="Strict, simple, lightweight RFC3339 functions",
     long_description=readme,

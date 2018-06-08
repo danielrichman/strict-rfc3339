@@ -74,6 +74,7 @@ class TestValidateRFC3339(unittest.TestCase):
         assert self.validate("1994-03-14T17:00:00Z")
         assert self.validate("2011-06-23T17:12:00+05:21")
         assert self.validate("1992-03-14T17:04:00-01:42")
+        assert self.validate("2018-08-06T14:30:00+0000")
 
     def test_rejects_trailing(self):
         assert not self.validate("2011-02-28T12:42:21Z123123")

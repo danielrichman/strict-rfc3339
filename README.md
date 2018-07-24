@@ -1,6 +1,12 @@
 Strict, simple, lightweight RFC3339 functions
 =============================================
 
+Installation
+-----
+```bash
+pip install strict-rfc3339
+```
+
 Goals
 -----
 

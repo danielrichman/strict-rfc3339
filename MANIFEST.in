@@ -2,3 +2,4 @@ include AUTHORS
 include LICENSE
 include README.md
 include README.txt
+include test_strict_rfc3339.py
